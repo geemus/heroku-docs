@@ -32,18 +32,13 @@ class Heroku::Command::Docs < Heroku::Command::Base
     when 301, 302
       docs(head.headers['Location'])
     when 404
-      message = [
-        "No #{topic} article found."
-      ]
-      suggestions = json_decode(Excon.get('https://devcenter.heroku.com/articles.json', :query => { :q => topic, :source => 'heroku-docs' }).body)['devcenter']
-      unless suggestions.empty?
-        message << "Perhaps you meant one of these:"
-        longest = suggestions.map {|suggestion| suggestion['url'].split('/articles/').last.length }.max
-        suggestions.each do |suggestion|
-          message << "  %-#{longest}s # %s" % [suggestion['url'].split('/articles/').last, suggestion['title']]
+      action("Opening search for #{topic}") do
+        require('launchy')
+        launchy = Launchy.open("https://devcenter.heroku.com/articles?q=#{topic}")
+        if launchy.respond_to?(:join)
+          launchy.join
         end
       end
-      error(message.join("\n"))
     end
   end
 
