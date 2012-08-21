@@ -32,6 +32,7 @@ class Heroku::Command::Docs < Heroku::Command::Base
     when 301, 302
       docs(head.headers['Location'])
     when 404
+      display(format_with_bang("No doc matches #{topic}."))
       action("Opening search for #{topic}") do
         require('launchy')
         launchy = Launchy.open("https://devcenter.heroku.com/articles?q=#{topic}")
