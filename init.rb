@@ -35,7 +35,7 @@ class Heroku::Command::Docs < Heroku::Command::Base
       message = [
         "No #{topic} article found."
       ]
-      suggestions = json_decode(Excon.get('https://devcenter.heroku.com/articles.json', :query => { :q => topic, :source => 'heroku-docs' }).body)['devcenter']
+      suggestions = json_decode(Excon.get('https://devcenter.heroku.com/api/v1/search.json', :query => { :query => topic, :source => 'heroku-docs' }).body)['results']
       unless suggestions.empty?
         message << "Perhaps you meant one of these:"
         longest = suggestions.map {|suggestion| suggestion['url'].split('/articles/').last.length }.max
