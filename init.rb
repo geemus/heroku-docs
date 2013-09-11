@@ -35,7 +35,7 @@ class Heroku::Command::Docs < Heroku::Command::Base
       display(format_with_bang("No doc matches #{topic}."))
       action("Opening search for #{topic}") do
         require('launchy')
-        launchy = Launchy.open("https://devcenter.heroku.com/articles?q=#{topic}")
+        launchy = Launchy.open("https://devcenter.heroku.com/search/raw?query=#{topic}")
         if launchy.respond_to?(:join)
           launchy.join
         end
